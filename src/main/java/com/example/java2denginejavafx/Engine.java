@@ -2,7 +2,7 @@ package com.example.java2denginejavafx;
 
 import com.example.java2denginejavafx.gui.AppButton;
 import javafx.application.Application;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.image.Image;
@@ -11,20 +11,21 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class Engine extends Application {
-
     private static final int FPS = 60;
-    private Canvas canvas;
+    private final EngineCanvas engineCanvas = new EngineCanvas(1440, 900);
     private GraphicsContext gc;
     private boolean running = true;
-    private final   Point  point = new Point(0,0,30,30,Color.BLACK, new Rectangle(20,20));
+    private final Point point = new Point(0, 0, 30, 30, Color.BLACK, new Rectangle(20, 20));
     private final Logger logger = new Logger();
     private final BorderPane root = new BorderPane();
     private final ButtonBar buttonBar = new ButtonBar();
-    private final BitmapService bitmapService = new BitmapService(root,point);
+    private final BitmapService bitmapService = new BitmapService(engineCanvas, point);
     private final AppButton appButton = new AppButton(buttonBar, bitmapService);
 
     @Override
@@ -49,23 +50,18 @@ public class Engine extends Application {
         appButton.createRectangleButton();
         appButton.createPolygonButton();
         root.setTop(buttonBar);
-
-        canvas = new Canvas(1440, 900);
-        gc = canvas.getGraphicsContext2D();
-
-        root.setCenter(canvas);
+        gc = engineCanvas.getCanvas().getGraphicsContext2D();
+        root.setCenter(engineCanvas.getCanvas());
         Color randomBackgroundColor = bitmapService.generateRandomColor();
         root.setStyle("-fx-background-color: " + bitmapService.toHexString(randomBackgroundColor) + ";");
 
         //ustawiam scene
-        primaryStage.setScene(new javafx.scene.Scene(root, 1440, 900));
+        primaryStage.setScene(new Scene(root, 1440, 900));
+
         primaryStage.setTitle("2D Game Engine");
         primaryStage.show();
-
-
         sceneSizeListener(primaryStage);
     }
-
 
 
     private void initGameLoop() {
@@ -104,11 +100,13 @@ public class Engine extends Application {
             }
         }).start();
     }
+
     private void initInputHandlers() {
-        canvas.setOnMouseClicked(mouseEvent -> handleMouseClick(mouseEvent,point));
-        canvas.setOnKeyPressed(keyEvent -> handleKeyPress(keyEvent,point));
-        canvas.setFocusTraversable(true);
+        engineCanvas.getCanvas().setOnMouseClicked(mouseEvent -> handleMouseClick(mouseEvent, point));
+        engineCanvas.getCanvas().setOnKeyPressed(keyEvent -> handleKeyPress(keyEvent, point));
+        engineCanvas.getCanvas().setFocusTraversable(true);
     }
+
     private void update() {
         try {
             //sprawdzenie dzialania loggera
@@ -120,26 +118,33 @@ public class Engine extends Application {
     }
 
     private void render(Point point) {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-       // System.out.println(point.getShape());
-        if (point.getShape() != null) {
-            // Rysowanie kształtu
-            gc.setFill(point.getColor());
-            Shape shape = point.getShape();
-            if (shape instanceof Rectangle rectangle) {
-                gc.fillRect(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
-            } else if (shape instanceof Circle circle) {
-                gc.fillOval(point.getX(), point.getY(), circle.getRadius(), circle.getRadius());
+        gc.clearRect(0, 0, engineCanvas.getCanvas().getWidth(), engineCanvas.getCanvas().getHeight());
+
+        if (engineCanvas.isBackgroundSelected()) {
+            // Rysowanie tła
+            gc.drawImage(engineCanvas.getBackgroundImage(), 0, 0, engineCanvas.getCanvas().getWidth(), engineCanvas.getCanvas().getHeight());
+        }
+
+        if (point != null) {
+            // Rysowanie punktu
+            if (point.getShape() != null) {
+                // Rysowanie kształtu
+                gc.setFill(point.getColor());
+                Shape shape = point.getShape();
+                if (shape instanceof Rectangle rectangle) {
+                    gc.fillRect(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
+                } else if (shape instanceof Circle circle) {
+                    gc.fillOval(point.getX(), point.getY(), circle.getRadius(), circle.getRadius());
+                }
+            } else if (point.getImage() != null) {
+                // Rysowanie bitmapy
+                Image image = point.getImage();
+                double width = Math.min(image.getWidth(), point.getWidth());
+                double height = Math.min(image.getHeight(), point.getHeight());
+                gc.drawImage(image, point.getX(), point.getY(), width, height);
             }
-        } else if (point.getImage() != null) {
-            // Rysowanie bitmapy
-            Image image = point.getImage();
-            double width = Math.min(image.getWidth(), point.getWidth());
-            double height = Math.min(image.getHeight(), point.getHeight());
-            gc.drawImage(image, point.getX(), point.getY(), width, height);
         }
     }
-
 
 
     private void handleMouseClick(MouseEvent event, Point point) {
@@ -157,7 +162,7 @@ public class Engine extends Application {
                 render(point);
             }
         } else if (event.getCode() == KeyCode.DOWN) {
-            if (point.getY() + moveAmount <= canvas.getHeight() - point.getHeight()) {
+            if (point.getY() + moveAmount <= engineCanvas.getCanvas().getHeight() - point.getHeight()) {
                 point.setY(point.getY() + moveAmount);
                 render(point);
             }
@@ -167,7 +172,7 @@ public class Engine extends Application {
                 render(point);
             }
         } else if (event.getCode() == KeyCode.RIGHT) {
-            if (point.getX() + moveAmount <= canvas.getWidth() - point.getWidth()) {
+            if (point.getX() + moveAmount <= engineCanvas.getCanvas().getWidth() - point.getWidth()) {
                 point.setX(point.getX() + moveAmount);
                 render(point);
             }
@@ -181,11 +186,11 @@ public class Engine extends Application {
 
     private void sceneSizeListener(Stage primaryStage) {
         primaryStage.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            canvas.setWidth(newWidth.doubleValue());
+            engineCanvas.getCanvas().setWidth(newWidth.doubleValue());
         });
 
         primaryStage.heightProperty().addListener((obs, oldHeight, newHeight) -> {
-            canvas.setHeight(newHeight.doubleValue());
+            engineCanvas.getCanvas().setHeight(newHeight.doubleValue());
         });
     }
 

@@ -1,8 +1,8 @@
 package com.example.java2denginejavafx;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
@@ -11,16 +11,13 @@ import java.util.Random;
 
 public class BitmapService {
 
-    private BorderPane root;
+    private EngineCanvas workPlace;
     private Point point;
     private final FileChooser fileChooser = new FileChooser();
 
-    public BitmapService(BorderPane root) {
-        this.root = root;
-    }
 
-    public BitmapService(BorderPane root, Point point) {
-        this.root = root;
+    public BitmapService(EngineCanvas workPlace, Point point) {
+        this.workPlace = workPlace;
         this.point = point;
     }
 
@@ -48,10 +45,16 @@ public class BitmapService {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image backgroundImage = new Image(selectedFile.toURI().toString());
-            root.setStyle("-fx-background-image: url('" + selectedFile.toURI().toString() + "'); " +
-                    "-fx-background-size: cover;");
+            GraphicsContext gc = workPlace.getCanvas().getGraphicsContext2D();
+            // Wyczyść obszar Canvas
+            gc.clearRect(0, 0, workPlace.getCanvas().getWidth(), workPlace.getCanvas().getHeight());
+            // Narysuj obraz jako tło
+            gc.drawImage(backgroundImage, 0, 0, workPlace.getCanvas().getWidth(), workPlace.getCanvas().getHeight());
+            workPlace.setBackgroundSelected(true);
+            workPlace.setBackgroundImage(backgroundImage);
         }
     }
+
     public void choosePlayerBitmap() {
         fileChooser.setTitle("Wybierz bitmape gracza");
         File selectedFile = fileChooser.showOpenDialog(null);
