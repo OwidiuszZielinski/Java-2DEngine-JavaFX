@@ -64,4 +64,7 @@ public class BitmapService {
             point.setImage(new Image(selectedFile.toURI().toString()));
         }
     }
+
+
+
 }

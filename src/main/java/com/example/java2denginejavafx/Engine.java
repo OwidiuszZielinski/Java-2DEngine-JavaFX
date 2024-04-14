@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
@@ -20,13 +21,17 @@ public class Engine extends Application {
     private static final int FPS = 60;
     private final EngineCanvas engineCanvas = new EngineCanvas(1440, 900);
     private GraphicsContext gc;
+    private final Point[] lastTwoClicks = new Point[2];
+    private int clickCounter = 0;
     private boolean running = true;
-    private final Point point = new Point(0, 0, 30, 30, Color.BLACK, new Rectangle(20, 20));
+    private final Point point = new Point(50, 50, 40, 50, Color.BLACK, new Rectangle(50, 50));
     private final Logger logger = new Logger();
     private final BorderPane root = new BorderPane();
     private final ButtonBar buttonBar = new ButtonBar();
     private final BitmapService bitmapService = new BitmapService(engineCanvas, point);
-    private final AppButton appButton = new AppButton(buttonBar, bitmapService);
+    private final PrimitiveRenderer primitiveRenderer = new PrimitiveRenderer(point, engineCanvas, lastTwoClicks);
+    private final AppButton appButton = new AppButton(buttonBar, bitmapService, primitiveRenderer);
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -49,6 +54,7 @@ public class Engine extends Application {
         appButton.createSquareButton();
         appButton.createRectangleButton();
         appButton.createPolygonButton();
+        appButton.createLineButton();
         root.setTop(buttonBar);
         gc = engineCanvas.getCanvas().getGraphicsContext2D();
         root.setCenter(engineCanvas.getCanvas());
@@ -102,7 +108,16 @@ public class Engine extends Application {
     }
 
     private void initInputHandlers() {
-        engineCanvas.getCanvas().setOnMouseClicked(mouseEvent -> handleMouseClick(mouseEvent, point));
+        engineCanvas.getCanvas().setOnMouseClicked(event -> {
+            handleMouseClick(event, point);
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+            if(point.getTool()!=null) {
+                lastTwoClicks[clickCounter % 2] = new Point(mouseX, mouseY);
+                clickCounter++;
+                System.out.println(lastTwoClicks[0] + " " + " 1: Klikniecie  : ");
+                System.out.println(lastTwoClicks[1] + " " + " 2: Klikniecie  : ");
+            }});
         engineCanvas.getCanvas().setOnKeyPressed(keyEvent -> handleKeyPress(keyEvent, point));
         engineCanvas.getCanvas().setFocusTraversable(true);
     }
@@ -119,13 +134,16 @@ public class Engine extends Application {
 
     private void render(Point point) {
         gc.clearRect(0, 0, engineCanvas.getCanvas().getWidth(), engineCanvas.getCanvas().getHeight());
-
         if (engineCanvas.isBackgroundSelected()) {
             // Rysowanie tła
             gc.drawImage(engineCanvas.getBackgroundImage(), 0, 0, engineCanvas.getCanvas().getWidth(), engineCanvas.getCanvas().getHeight());
         }
-
         if (point != null) {
+            if (point.getTool() != null && point.getTool().getName().equals("Line")) {
+                if(lastTwoClicks[1]!=null) {
+                    primitiveRenderer.renderLine(gc, lastTwoClicks[0], lastTwoClicks[1]);
+                }
+            }
             // Rysowanie punktu
             if (point.getShape() != null) {
                 // Rysowanie kształtu
@@ -133,6 +151,12 @@ public class Engine extends Application {
                 Shape shape = point.getShape();
                 if (shape instanceof Rectangle rectangle) {
                     gc.fillRect(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
+                }
+                if (shape instanceof Polygon polygon) {
+                    primitiveRenderer.drawEquilateralTriangle(gc, point.getHeight());
+                }
+                if (shape instanceof Hexagon hexagon) {
+                    primitiveRenderer.drawRegularHexagon(gc, point.getHeight());
                 } else if (shape instanceof Circle circle) {
                     gc.fillOval(point.getX(), point.getY(), circle.getRadius(), circle.getRadius());
                 }
@@ -176,6 +200,16 @@ public class Engine extends Application {
                 point.setX(point.getX() + moveAmount);
                 render(point);
             }
+        } else if (event.getCode() == KeyCode.MINUS) {
+            point.setHeight(point.getHeight() - 1);
+            point.setWidth(point.getWidth() - 1);
+            System.out.println("Zmniejszono rozmiar : " + point.getHeight());
+
+        } else if (event.getCode() == KeyCode.EQUALS) {
+            point.setHeight(point.getHeight() + 1);
+            point.setWidth(point.getWidth() + 1);
+            System.out.println("Zwiekszono rozmiar : " + point.getHeight());
+
         } else if (event.getCode() == KeyCode.ESCAPE) {
             running = false;
             logger.closeErrorLogger();

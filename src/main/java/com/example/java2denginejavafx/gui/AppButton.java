@@ -1,11 +1,12 @@
 package com.example.java2denginejavafx.gui;
 
 import com.example.java2denginejavafx.BitmapService;
+import com.example.java2denginejavafx.PrimitiveRenderer;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
@@ -15,9 +16,12 @@ public class AppButton {
     private final double prefHeight = 30;
     private final BitmapService bitmapService;
 
-    public AppButton(ButtonBar buttonBar, BitmapService bitmapService) {
+    private final PrimitiveRenderer primitiveRenderer;
+
+    public AppButton(ButtonBar buttonBar, BitmapService bitmapService, PrimitiveRenderer primitiveRenderer) {
         this.buttonBar = buttonBar;
         this.bitmapService = bitmapService;
+        this.primitiveRenderer = primitiveRenderer;
     }
 
     public double getPrefWidth() {
@@ -53,7 +57,7 @@ public class AppButton {
         circle.setStroke(Color.BLACK);
         Button chooseBackgroundButton = new Button();
         chooseBackgroundButton.setGraphic(circle);
-        chooseBackgroundButton.setOnAction(event -> bitmapService.chooseBackground());
+        chooseBackgroundButton.setOnAction(event -> primitiveRenderer.chooseDrawCircle());
         chooseBackgroundButton.setFocusTraversable(false);
         chooseBackgroundButton.setMinWidth(30);
         chooseBackgroundButton.setMaxWidth(30);
@@ -73,7 +77,7 @@ public class AppButton {
         triangle.setStroke(Color.BLACK);
         Button chooseTriangleButton = new Button();
         chooseTriangleButton.setGraphic(triangle);
-        //chooseTriangleButton.setOnAction(event -> bitmapService.chooseTriangle());
+        chooseTriangleButton.setOnAction(event -> primitiveRenderer.chooseDrawPolygon());
         chooseTriangleButton.setFocusTraversable(false);
         chooseTriangleButton.setMinHeight(30);
         chooseTriangleButton.setMaxWidth(50);
@@ -86,13 +90,13 @@ public class AppButton {
         square.setFill(null);
         square.setStroke(Color.BLACK);
 
-        Button chooseSquareButton = new Button();
-        chooseSquareButton.setGraphic(square);
-        //chooseSquareButton.setOnAction(event -> bitmapService.chooseSquare());
-        chooseSquareButton.setFocusTraversable(false);
-        chooseSquareButton.setMinHeight(30);
-        chooseSquareButton.setMaxWidth(50);
-        buttonBar.getButtons().add(chooseSquareButton);
+        Button button = new Button();
+        button.setGraphic(square);
+        button.setOnAction(event -> primitiveRenderer.chooseDrawSquare());
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(50);
+        buttonBar.getButtons().add(button);
     }
 
     // Metoda tworząca przycisk z prostokątem
@@ -101,13 +105,13 @@ public class AppButton {
         rectangle.setFill(null);
         rectangle.setStroke(Color.BLACK);
 
-        Button chooseRectangleButton = new Button();
-        chooseRectangleButton.setGraphic(rectangle);
-        //chooseRectangleButton.setOnAction(event -> bitmapService.chooseRectangle());
-        chooseRectangleButton.setFocusTraversable(false);
-        chooseRectangleButton.setMinHeight(30);
-        chooseRectangleButton.setMaxWidth(50);
-        buttonBar.getButtons().add(chooseRectangleButton);
+        Button button = new Button();
+        button.setGraphic(rectangle);
+        button.setOnAction(event -> primitiveRenderer.chooseDrawRectangle());
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(50);
+        buttonBar.getButtons().add(button);
     }
 
     // Metoda tworząca przycisk z wielokątem (np. sześciokątem)
@@ -122,13 +126,22 @@ public class AppButton {
         polygon.setFill(null);
         polygon.setStroke(Color.BLACK);
 
-        Button choosePolygonButton = new Button();
-        choosePolygonButton.setGraphic(polygon);
-        //choosePolygonButton.setOnAction(event -> bitmapService.choosePolygon());
-        choosePolygonButton.setFocusTraversable(false);
-        choosePolygonButton.setMinHeight(30);
-        choosePolygonButton.setMaxWidth(50);
-        buttonBar.getButtons().add(choosePolygonButton);
+        Button button = new Button();
+        button.setGraphic(polygon);
+        button.setOnAction(event -> primitiveRenderer.chooseDrawHexagon());
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(50);
+        buttonBar.getButtons().add(button);
+    }
+    public void createLineButton() {
+        Button button = new Button();
+        button.setGraphic(new Rectangle(35.0,1.0));
+        button.setOnAction(event -> primitiveRenderer.chooseDrawLine());
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(50);
+        buttonBar.getButtons().add(button);
     }
 
 

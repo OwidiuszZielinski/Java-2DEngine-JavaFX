@@ -13,7 +13,28 @@ public class Point {
     private Shape shape;
     private Image image;
 
+
+    private Tool tool;
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                ", width=" + width +
+                ", height=" + height +
+                ", color=" + color +
+                ", shape=" + shape +
+                ", image=" + image +
+                '}';
+    }
+
     public Point() {
+    }
+
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     // Konstruktor dla kształtu
@@ -55,6 +76,14 @@ public class Point {
 
     public double getWidth() {
         return width;
+    }
+
+    public Tool getTool() {
+        return tool;
+    }
+
+    public void setTool(Tool tool) {
+        this.tool = tool;
     }
 
     public void setWidth(double width) {
