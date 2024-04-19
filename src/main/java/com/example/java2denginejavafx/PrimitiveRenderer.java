@@ -26,6 +26,7 @@ public class PrimitiveRenderer {
         point.setTool(null);
         point.setShape(new Circle(point.getHeight()));
         drawShape();
+
     }
 
     public void chooseDrawSquare() {
@@ -64,7 +65,7 @@ public class PrimitiveRenderer {
             Shape shape = point.getShape();
             if (shape instanceof Rectangle rectangle) {
                 System.out.println("Kwadrat");
-                gc.fillRect(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
+                gc.fillRect(point.getX(), point.getY(), point.getWidth(), point.getHeight());
             }
             if (shape instanceof Polygon polygon) {
                 System.out.println("Trójkąt");
@@ -76,7 +77,7 @@ public class PrimitiveRenderer {
                 drawRegularHexagon(gc, point.getHeight());
             } else if (shape instanceof Circle circle) {
                 System.out.println("Okrąg");
-                gc.fillOval(point.getX(), point.getY(), circle.getRadius(), circle.getRadius());
+                gc.fillOval(point.getX(), point.getY(), point.getHeight(), point.getHeight());
             }
         }
     }

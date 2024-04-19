@@ -1,12 +1,14 @@
 package com.example.java2denginejavafx;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class EngineCanvas {
 
     private  Canvas canvas;
     private boolean backgroundSelected;
+
 
     public Image getBackgroundImage() {
         return backgroundImage;
@@ -17,6 +19,8 @@ public class EngineCanvas {
     }
 
     private Image backgroundImage;
+
+    private GraphicsContext graphicsContext;
 
     public Canvas getCanvas() {
         return canvas;

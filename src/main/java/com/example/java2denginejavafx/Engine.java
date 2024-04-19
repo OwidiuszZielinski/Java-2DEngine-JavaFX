@@ -3,6 +3,7 @@ package com.example.java2denginejavafx;
 import com.example.java2denginejavafx.gui.AppButton;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.image.Image;
@@ -18,9 +19,11 @@ import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class Engine extends Application {
+
     private static final int FPS = 60;
-    private final EngineCanvas engineCanvas = new EngineCanvas(1440, 900);
     private GraphicsContext gc;
+
+    private final EngineCanvas engineCanvas = new EngineCanvas(1440, 900);
     private final Point[] lastTwoClicks = new Point[2];
     private int clickCounter = 0;
     private boolean running = true;
@@ -28,9 +31,11 @@ public class Engine extends Application {
     private final Logger logger = new Logger();
     private final BorderPane root = new BorderPane();
     private final ButtonBar buttonBar = new ButtonBar();
-    private final BitmapService bitmapService = new BitmapService(engineCanvas, point);
+    private final BitmapService bitmapService = new BitmapService(engineCanvas, point,gc);
     private final PrimitiveRenderer primitiveRenderer = new PrimitiveRenderer(point, engineCanvas, lastTwoClicks);
     private final AppButton appButton = new AppButton(buttonBar, bitmapService, primitiveRenderer);
+
+
 
 
     @Override
@@ -55,6 +60,7 @@ public class Engine extends Application {
         appButton.createRectangleButton();
         appButton.createPolygonButton();
         appButton.createLineButton();
+        appButton.createMoveOrRenderButton();
         root.setTop(buttonBar);
         gc = engineCanvas.getCanvas().getGraphicsContext2D();
         root.setCenter(engineCanvas.getCanvas());
@@ -133,7 +139,11 @@ public class Engine extends Application {
     }
 
     private void render(Point point) {
-        gc.clearRect(0, 0, engineCanvas.getCanvas().getWidth(), engineCanvas.getCanvas().getHeight());
+        if(!bitmapService.isRender()) {
+            bitmapService.load();
+            gc.clearRect(0,0,engineCanvas.getCanvas().getHeight(),engineCanvas.getCanvas().getWidth());
+
+        }
         if (engineCanvas.isBackgroundSelected()) {
             // Rysowanie tła
             gc.drawImage(engineCanvas.getBackgroundImage(), 0, 0, engineCanvas.getCanvas().getWidth(), engineCanvas.getCanvas().getHeight());
@@ -142,6 +152,8 @@ public class Engine extends Application {
             if (point.getTool() != null && point.getTool().getName().equals("Line")) {
                 if(lastTwoClicks[1]!=null) {
                     primitiveRenderer.renderLine(gc, lastTwoClicks[0], lastTwoClicks[1]);
+                    // Tworzenie obiektu Image i zapisywanie zawartości GraphicsContext na nim
+
                 }
             }
             // Rysowanie punktu
@@ -151,6 +163,9 @@ public class Engine extends Application {
                 Shape shape = point.getShape();
                 if (shape instanceof Rectangle rectangle) {
                     gc.fillRect(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
+                    // Tworzenie obiektu Image i zapisywanie zawartości GraphicsContext na nim
+                   // Image snapshot = engineCanvas.getCanvas().snapshot(null, null);
+
                 }
                 if (shape instanceof Polygon polygon) {
                     primitiveRenderer.drawEquilateralTriangle(gc, point.getHeight());
@@ -160,13 +175,14 @@ public class Engine extends Application {
                 } else if (shape instanceof Circle circle) {
                     gc.fillOval(point.getX(), point.getY(), circle.getRadius(), circle.getRadius());
                 }
-            } else if (point.getImage() != null) {
+            } else if (point.getImage() != null && point.getTool()==null) {
                 // Rysowanie bitmapy
                 Image image = point.getImage();
                 double width = Math.min(image.getWidth(), point.getWidth());
                 double height = Math.min(image.getHeight(), point.getHeight());
                 gc.drawImage(image, point.getX(), point.getY(), width, height);
             }
+
         }
     }
 
@@ -201,13 +217,13 @@ public class Engine extends Application {
                 render(point);
             }
         } else if (event.getCode() == KeyCode.MINUS) {
-            point.setHeight(point.getHeight() - 1);
-            point.setWidth(point.getWidth() - 1);
+            point.setHeight(point.getHeight() - 5);
+            point.setWidth(point.getWidth() - 5);
             System.out.println("Zmniejszono rozmiar : " + point.getHeight());
 
         } else if (event.getCode() == KeyCode.EQUALS) {
-            point.setHeight(point.getHeight() + 1);
-            point.setWidth(point.getWidth() + 1);
+            point.setHeight(point.getHeight() + 5);
+            point.setWidth(point.getWidth() + 5);
             System.out.println("Zwiekszono rozmiar : " + point.getHeight());
 
         } else if (event.getCode() == KeyCode.ESCAPE) {

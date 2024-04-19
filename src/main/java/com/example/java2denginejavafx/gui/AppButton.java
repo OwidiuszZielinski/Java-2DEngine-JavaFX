@@ -144,5 +144,32 @@ public class AppButton {
         buttonBar.getButtons().add(button);
     }
 
+    public void createMoveOrRenderButton(){
+        Button button = new Button("Render");
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(50);
+        buttonBar.getButtons().add(button);
+
+        button.setOnAction(event -> {
+            // Zmiana tekstu na przycisku
+            if (button.getText().equals("Render")) {
+                button.setText("Move");
+                bitmapService.setRender(true);
+            } else {
+
+                button.setText("Render");
+                bitmapService.setRender(false);
+                //Napisz metode ktora zapisze aktualne tlo do tla i wczyta na tlo
+                bitmapService.save();
+
+            }
+            // Zablokowanie obsługi zdarzenia po pierwszym kliknięciu
+        });
+
+
+
+    }
+
 
 }
