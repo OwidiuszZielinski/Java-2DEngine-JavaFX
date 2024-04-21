@@ -1,14 +1,12 @@
 package com.example.java2denginejavafx;
 
-import javafx.scene.SnapshotParameters;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.embed.swing.SwingFXUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,6 +19,7 @@ public class BitmapService {
     private EngineCanvas workPlace;
     private Point point;
     private final FileChooser fileChooser = new FileChooser();
+
 
     public GraphicsContext getBackground() {
         return background;
@@ -88,23 +87,49 @@ public class BitmapService {
             workPlace.setBackgroundImage(backgroundImage);
         }
     }
+
     public void chooseBackgroundFromFile() {
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/canvas.png"));
+            // Sprawdź, czy plik istnieje
+            File file = new File("src/main/resources/canvas.png");
+            if (!file.exists()) {
+                System.out.println("Plik " + file.getPath() + " nie istnieje.");
+                return;
+            }
 
-            // Konwersja BufferedImage na WritableImage
-            WritableImage writableImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            // Wczytaj obraz z pliku
+            BufferedImage bufferedImage = ImageIO.read(file);
 
-            // Pobranie obiektu Canvas z workPlace (zakładam, że workPlace jest instancją klasy zawierającej Canvas)
+            // Sprawdź, czy udało się wczytać obraz
+            if (bufferedImage == null) {
+                System.out.println("Nie udało się wczytać obrazu z pliku.");
+                return;
+            }
+
+            // Konwertuj BufferedImage do javafx.scene.image.Image
+            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            // Pobierz kanwę i kontekst graficzny
             Canvas canvas = workPlace.getCanvas();
-
-            // Ustawienie zawartości Canvas na wczytany obraz
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.drawImage(writableImage, 0, 0, canvas.getWidth(), canvas.getHeight());
 
-            System.out.println("Obraz został wczytany i ustawiony jako zawartość Canvas.");
+            // Wyczyść kanwę
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+            // Narysuj obraz na kanwie
+            gc.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
+
+            // Zwolnij zasoby
+            bufferedImage = null;
+            image = null;
         } catch (IOException e) {
+            // Obsłuż wyjątek IO
             System.out.println("Błąd podczas wczytywania obrazu: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            // Obsłuż inne wyjątki
+            System.out.println("Wystąpił nieoczekiwany błąd: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -119,31 +144,83 @@ public class BitmapService {
         }
     }
 
-    public void clear(){
-       GraphicsContext gc =  workPlace.getCanvas().getGraphicsContext2D();
-
+    public void clear() {
+        workPlace.getCanvas().getGraphicsContext2D().clearRect(0, 0, workPlace.getCanvas().getWidth(), workPlace.getCanvas().getHeight());
+        save();
+        workPlace.setBackgroundSelected(false);
+        load();
 
     }
 
+
     public void save() {
-        // Utworzenie obiektu WritableImage i zapisanie na nim zawartości GraphicsContext
         WritableImage writableImage = new WritableImage((int) workPlace.getCanvas().getWidth(), (int) workPlace.getCanvas().getHeight());
         workPlace.getCanvas().snapshot(null, writableImage);
-
-// Konwersja WritableImage na BufferedImage
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
-
-// Zapisanie BufferedImage do pliku (np. PNG)
         File outputFile = new File("src/main/resources/canvas.png");
         try {
             ImageIO.write(bufferedImage, "png", outputFile);
-            System.out.println("Obraz został zapisany do pliku.");
         } catch (IOException e) {
-            System.out.println("Błąd podczas zapisu obrazu: " + e.getMessage());
+            e.printStackTrace(); // Wyświetlanie błędu w przypadku problemów z zapisem
         }
+    }
+
+
+    public void load() {
+        chooseBackgroundFromFile();
+    }
+
+    public void fill() {
+
+
+       point.setShape(null);
+       point.setTool(new Tool("Fill"));
+//        for (int i = 0; i < 300; i++) {
+//            workPlace.getCanvas().getGraphicsContext2D().fillRect(5,50,1,1);
+//            save();
+//        }
+        // Pobierz aktualne współrzędne punktu
+//        int x = (int) point.getX();
+//        int y = (int) point.getY();
+//        // Pobierz aktualny kolor punktu
+//        Color pointColor = point.getCurrentColor();
+//
+//        System.out.println(point.getTargetColor().toString() + "KOLOR DOCELOWY");
+//        System.out.println("POINT X : " + x );
+//        System.out.println("POINT Y : " + y );
+//        // Wywołaj floodFill z aktualnym kolorem punktu
+//        floodFill(x, y, pointColor);
+    }
+    public void floodFill(int x, int y, Color pointColor) {
+        // Pobierz kolor piksela na pozycji (x, y)
+        Color currentColor = getColor(x,y);
+        System.out.println("aktualny color : " + currentColor);
+        // Jeśli kolor piksela jest inny niż kolor docelowy, zakończ rekurencję
+        if (pointColor.equals(currentColor)) {
+            System.out.println("WYKONAL SIE RETURN");
+            return;
+
+        }
+        setColor(x, y, Color.BLACK);
+
+        floodFill(x + 1, y, pointColor);
+        floodFill(x - 1, y, pointColor);
+        floodFill(x, y + 1, pointColor);
+        floodFill(x, y - 1, pointColor);
 
     }
-    public void load(){
-        chooseBackgroundFromFile();
+
+    private Color getColor(int x, int y) {
+        Image image = workPlace.getCanvas().snapshot(null,null);
+        return image.getPixelReader().getColor((int)point.getX(),(int)point.getY());
+
+    }
+
+    private void setColor(double x, double y, Color color) {
+        System.out.println("SET COLOR");
+        // Ustaw kolor piksela na pozycji (x, y) na kanwie
+        workPlace.getCanvas().getGraphicsContext2D().setFill(color);
+        workPlace.getCanvas().getGraphicsContext2D().fillRect(x, y, 1, 1);
+        save();
     }
 }

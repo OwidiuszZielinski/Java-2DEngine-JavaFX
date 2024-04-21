@@ -9,10 +9,13 @@ public class Point {
     private double y;
     private double width;
     private double height;
-    private Color color;
+    private Color targetColor;
+    private Color currentColor;
+
+
+
     private Shape shape;
     private Image image;
-
 
     private Tool tool;
 
@@ -23,7 +26,7 @@ public class Point {
                 ", y=" + y +
                 ", width=" + width +
                 ", height=" + height +
-                ", color=" + color +
+                ", color=" + targetColor +
                 ", shape=" + shape +
                 ", image=" + image +
                 '}';
@@ -38,12 +41,12 @@ public class Point {
     }
 
     // Konstruktor dla kształtu
-    public Point(double x, double y, double width, double height, Color color, Shape shape) {
+    public Point(double x, double y, double width, double height, Color targetColor, Shape shape) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.targetColor = targetColor;
         this.shape = shape;
     }
 
@@ -98,12 +101,12 @@ public class Point {
         this.height = height;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getTargetColor() {
+        return targetColor;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setTargetColor(Color targetColor) {
+        this.targetColor = targetColor;
     }
 
     public Shape getShape() {
@@ -120,5 +123,13 @@ public class Point {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public Color getCurrentColor() {
+        return currentColor;
+    }
+
+    public void setCurrentColor(Color currentColor) {
+        this.currentColor = currentColor;
     }
 }

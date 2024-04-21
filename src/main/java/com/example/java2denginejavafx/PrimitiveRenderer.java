@@ -1,16 +1,24 @@
 package com.example.java2denginejavafx;
 
+import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class PrimitiveRenderer {
 
-    private Point point;
+    private final Point point;
     private final EngineCanvas canvas;
+
 
 
     private final Point[] lastTwoClicks;
@@ -19,6 +27,7 @@ public class PrimitiveRenderer {
         this.point = point;
         this.canvas = canvas;
         this.lastTwoClicks = lastTwoClicks;
+
     }
 
 
@@ -58,10 +67,10 @@ public class PrimitiveRenderer {
 
     public void drawShape() {
         System.out.println("Wybrano rysowanie : ");
+        GraphicsContext gc = canvas.getCanvas().getGraphicsContext2D();
+        gc.setFill(point.getTargetColor());
         if (point.getShape() != null) {
-            // Rysowanie kształtu
-            GraphicsContext gc = canvas.getCanvas().getGraphicsContext2D();
-            gc.setFill(point.getColor());
+
             Shape shape = point.getShape();
             if (shape instanceof Rectangle rectangle) {
                 System.out.println("Kwadrat");
@@ -70,7 +79,6 @@ public class PrimitiveRenderer {
             if (shape instanceof Polygon polygon) {
                 System.out.println("Trójkąt");
                 drawEquilateralTriangle(gc, point.getHeight());
-
             }
             if (shape instanceof Hexagon hexagon) {
                 System.out.println("Hexagon");
@@ -94,7 +102,7 @@ public class PrimitiveRenderer {
         double y3 = point.getY() - height / 2;
 
         // Rysowanie trójkąta
-        gc.setFill(Color.BLACK);
+        gc.setFill(point.getTargetColor());
         gc.fillPolygon(new double[]{ x1, x2, x3 }, new double[]{ y1, y2, y3 }, 3);
     }
 
@@ -108,7 +116,7 @@ public class PrimitiveRenderer {
             yPoints[i] = point.getY() + sideLength * Math.sin(angleRad);
         }
 
-        gc.setFill(Color.BLACK);
+        gc.setFill(point.getTargetColor());
         gc.fillPolygon(xPoints, yPoints, 6);
     }
 
@@ -117,7 +125,10 @@ public class PrimitiveRenderer {
         gc.strokeLine(a.getX(), a.getY(), b.getX(), b.getY());
     }
 
-    public void drawLine() {
-        renderLine(canvas.getCanvas().getGraphicsContext2D(),lastTwoClicks[0],lastTwoClicks[1]);
+
+    public void setColor(Color selectedColor) {
+        System.out.println("Ustawiono kolor : " + selectedColor.toString());
+        point.setTargetColor(selectedColor);
     }
+
 }
