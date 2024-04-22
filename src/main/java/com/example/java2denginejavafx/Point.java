@@ -9,25 +9,13 @@ public class Point {
     private double y;
     private double width;
     private double height;
-    private Color color;
+    private Color targetColor;
     private Shape shape;
     private Image image;
 
 
+    private double imageRotate;
     private Tool tool;
-
-    @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                ", width=" + width +
-                ", height=" + height +
-                ", color=" + color +
-                ", shape=" + shape +
-                ", image=" + image +
-                '}';
-    }
 
     public Point() {
     }
@@ -37,26 +25,35 @@ public class Point {
         this.y = y;
     }
 
-    // Konstruktor dla kształtu
-    public Point(double x, double y, double width, double height, Color color, Shape shape) {
+
+    public Point(double x, double y, double width, double height, Color targetColor, Shape shape) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.targetColor = targetColor;
         this.shape = shape;
     }
 
-    // Konstruktor dla obrazu (bitmapy)
-    public Point(double x, double y, Image image) {
-        this.x = x;
-        this.y = y;
-        this.image = image;
-        this.width = image.getWidth();
-        this.height = image.getHeight();
+    public Point(Point point) {
+        this.x = point.x;
+        this.y = point.y;
+        this.width = point.width;
+        this.height = point.height;
+        this.targetColor = point.targetColor;
+        this.shape = point.shape;
+        this.image = point.image;
+        this.imageRotate = point.imageRotate;
+        this.tool = point.tool;
     }
 
-    // Gettery i settery
+    public double getImageRotate() {
+        return imageRotate;
+    }
+
+    public void setImageRotate(double imageRotate) {
+        this.imageRotate = imageRotate;
+    }
 
     public double getX() {
         return x;
@@ -98,12 +95,12 @@ public class Point {
         this.height = height;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getTargetColor() {
+        return targetColor;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setTargetColor(Color targetColor) {
+        this.targetColor = targetColor;
     }
 
     public Shape getShape() {
@@ -121,4 +118,5 @@ public class Point {
     public void setImage(Image image) {
         this.image = image;
     }
+
 }

@@ -1,17 +1,22 @@
 package com.example.java2denginejavafx;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 public class PrimitiveRenderer {
 
-    private Point point;
+    private final Point point;
     private final EngineCanvas canvas;
-
 
     private final Point[] lastTwoClicks;
 
@@ -19,13 +24,15 @@ public class PrimitiveRenderer {
         this.point = point;
         this.canvas = canvas;
         this.lastTwoClicks = lastTwoClicks;
+
     }
 
 
     public void chooseDrawCircle() {
         point.setTool(null);
         point.setShape(new Circle(point.getHeight()));
-        drawShape();
+
+
     }
 
     public void chooseDrawSquare() {
@@ -55,31 +62,7 @@ public class PrimitiveRenderer {
 
 
 
-    public void drawShape() {
-        System.out.println("Wybrano rysowanie : ");
-        if (point.getShape() != null) {
-            // Rysowanie kształtu
-            GraphicsContext gc = canvas.getCanvas().getGraphicsContext2D();
-            gc.setFill(point.getColor());
-            Shape shape = point.getShape();
-            if (shape instanceof Rectangle rectangle) {
-                System.out.println("Kwadrat");
-                gc.fillRect(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
-            }
-            if (shape instanceof Polygon polygon) {
-                System.out.println("Trójkąt");
-                drawEquilateralTriangle(gc, point.getHeight());
 
-            }
-            if (shape instanceof Hexagon hexagon) {
-                System.out.println("Hexagon");
-                drawRegularHexagon(gc, point.getHeight());
-            } else if (shape instanceof Circle circle) {
-                System.out.println("Okrąg");
-                gc.fillOval(point.getX(), point.getY(), circle.getRadius(), circle.getRadius());
-            }
-        }
-    }
 
 
     public void drawEquilateralTriangle(GraphicsContext gc, double sideLength) {
@@ -91,24 +74,40 @@ public class PrimitiveRenderer {
         double y2 = y1;
         double x3 = point.getX();
         double y3 = point.getY() - height / 2;
-
-        // Rysowanie trójkąta
-        gc.setFill(Color.BLACK);
+        gc.setFill(point.getTargetColor());
         gc.fillPolygon(new double[]{ x1, x2, x3 }, new double[]{ y1, y2, y3 }, 3);
     }
 
     public void drawRegularHexagon(GraphicsContext gc, double sideLength) {
         double[] xPoints = new double[6];
         double[] yPoints = new double[6];
-
+        double rotate = 0;
+        if (point.getShape() instanceof Hexagon h) {
+            rotate = h.getRotate();
+        }
         for (int i = 0; i < 6; i++) {
-            double angleRad = Math.toRadians(60 * i);
+            double angleRad = Math.toRadians(60 * i + rotate);
             xPoints[i] = point.getX() + sideLength * Math.cos(angleRad);
             yPoints[i] = point.getY() + sideLength * Math.sin(angleRad);
         }
 
-        gc.setFill(Color.BLACK);
+        gc.setFill(point.getTargetColor());
         gc.fillPolygon(xPoints, yPoints, 6);
+    }
+    public void drawSquare(GraphicsContext gc){
+        double x = point.getX() - point.getWidth() / 2;
+        double y = point.getY() - point.getHeight() / 2;
+        if(point.getShape() instanceof Rectangle rectangle) {
+            if (point.getShape().getRotate() != 0) {
+                gc.save();
+                gc.translate(x + rectangle.getWidth() / 2, y + rectangle.getHeight() / 2);
+                gc.rotate(rectangle.getRotate());
+                gc.fillRect(-rectangle.getWidth() / 2, -rectangle.getHeight() / 2, rectangle.getWidth(), rectangle.getHeight());
+                gc.restore();
+            } else {
+                gc.fillRect(x, y, rectangle.getWidth(), rectangle.getHeight());
+            }
+        }
     }
 
     public void renderLine(GraphicsContext gc, Point a, Point b) {
@@ -116,7 +115,42 @@ public class PrimitiveRenderer {
         gc.strokeLine(a.getX(), a.getY(), b.getX(), b.getY());
     }
 
-    public void drawLine() {
-        renderLine(canvas.getCanvas().getGraphicsContext2D(),lastTwoClicks[0],lastTwoClicks[1]);
+
+    public void setColor(Color selectedColor) {
+        System.out.println("Ustawiono kolor : " + selectedColor.toString());
+        point.setTargetColor(selectedColor);
+        //point.setShape(null);
+    }
+
+
+
+    public void drawCircle(GraphicsContext gc) {
+        if (point.getShape() instanceof Circle circle) {
+            double x = point.getX() - point.getWidth() / 2;
+            double y = point.getY() - point.getHeight() / 2;
+            gc.fillOval(x,y,circle.getRadius(),circle.getRadius());
+        }
+    }
+
+
+
+    public void rotateObject() {
+        rotatePoint();
+
+    }
+
+    private void rotatePoint() {
+        if (point.getShape() instanceof Rectangle rectangle) {
+            rectangle.setRotate(rectangle.getRotate() + 5);
+        }
+        if(point.getShape() instanceof  Hexagon hexagon){
+            hexagon.setRotate(hexagon.getRotate() + 5);
+        }
+        if(point.getImage() != null){
+            point.setImageRotate(point.getImageRotate() + 5);
+        }
+
     }
 }
+
+
