@@ -12,11 +12,11 @@ public class Point {
     private Color targetColor;
     private Color currentColor;
 
-
-
     private Shape shape;
     private Image image;
 
+
+    private double imageRotate;
     private Tool tool;
 
     @Override
@@ -60,6 +60,14 @@ public class Point {
     }
 
     // Gettery i settery
+
+    public double getImageRotate() {
+        return imageRotate;
+    }
+
+    public void setImageRotate(double imageRotate) {
+        this.imageRotate = imageRotate;
+    }
 
     public double getX() {
         return x;
@@ -111,6 +119,9 @@ public class Point {
 
     public Shape getShape() {
         return shape;
+    }
+    public Shape getShapeFrom() {
+        return this.shape;
     }
 
     public void setShape(Shape shape) {

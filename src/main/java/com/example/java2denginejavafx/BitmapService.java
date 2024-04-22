@@ -1,18 +1,23 @@
 package com.example.java2denginejavafx;
 
+import com.example.java2denginejavafx.game.Game;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Stack;
 
 public class BitmapService {
 
@@ -165,62 +170,26 @@ public class BitmapService {
         }
     }
 
+    public void saveFill() {
+        WritableImage writableImage = new WritableImage((int) workPlace.getCanvas().getWidth(), (int) workPlace.getCanvas().getHeight());
+        workPlace.getCanvas().snapshot(null, writableImage);
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+        File outputFile = new File("src/main/resources/canvasFill.png");
+        try {
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (IOException e) {
+            e.printStackTrace(); // Wyświetlanie błędu w przypadku problemów z zapisem
+        }
+    }
+
 
     public void load() {
         chooseBackgroundFromFile();
     }
 
-    public void fill() {
 
-
-       point.setShape(null);
-       point.setTool(new Tool("Fill"));
-//        for (int i = 0; i < 300; i++) {
-//            workPlace.getCanvas().getGraphicsContext2D().fillRect(5,50,1,1);
-//            save();
-//        }
-        // Pobierz aktualne współrzędne punktu
-//        int x = (int) point.getX();
-//        int y = (int) point.getY();
-//        // Pobierz aktualny kolor punktu
-//        Color pointColor = point.getCurrentColor();
-//
-//        System.out.println(point.getTargetColor().toString() + "KOLOR DOCELOWY");
-//        System.out.println("POINT X : " + x );
-//        System.out.println("POINT Y : " + y );
-//        // Wywołaj floodFill z aktualnym kolorem punktu
-//        floodFill(x, y, pointColor);
-    }
-    public void floodFill(int x, int y, Color pointColor) {
-        // Pobierz kolor piksela na pozycji (x, y)
-        Color currentColor = getColor(x,y);
-        System.out.println("aktualny color : " + currentColor);
-        // Jeśli kolor piksela jest inny niż kolor docelowy, zakończ rekurencję
-        if (pointColor.equals(currentColor)) {
-            System.out.println("WYKONAL SIE RETURN");
-            return;
-
-        }
-        setColor(x, y, Color.BLACK);
-
-        floodFill(x + 1, y, pointColor);
-        floodFill(x - 1, y, pointColor);
-        floodFill(x, y + 1, pointColor);
-        floodFill(x, y - 1, pointColor);
-
-    }
-
-    private Color getColor(int x, int y) {
-        Image image = workPlace.getCanvas().snapshot(null,null);
-        return image.getPixelReader().getColor((int)point.getX(),(int)point.getY());
-
-    }
-
-    private void setColor(double x, double y, Color color) {
-        System.out.println("SET COLOR");
-        // Ustaw kolor piksela na pozycji (x, y) na kanwie
-        workPlace.getCanvas().getGraphicsContext2D().setFill(color);
-        workPlace.getCanvas().getGraphicsContext2D().fillRect(x, y, 1, 1);
-        save();
+    public void run() {
+        Game game = new Game();
+        game.start(new Stage());
     }
 }

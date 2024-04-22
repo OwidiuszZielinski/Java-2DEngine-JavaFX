@@ -2,6 +2,7 @@ package com.example.java2denginejavafx.gui;
 
 import com.example.java2denginejavafx.BitmapService;
 import com.example.java2denginejavafx.PrimitiveRenderer;
+import com.example.java2denginejavafx.game.Game;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -211,6 +213,23 @@ public class AppButton {
 
     }
 
+    public void createRunButton(){
+        Button button = new Button();
+        Image image = loadImage("src/main/resources/run.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20); // Ustawienie szerokości obrazu na 30
+        imageView.setFitHeight(20); // Ustawienie wysokości obrazu na 30
+        imageView.setPreserveRatio(true); // Zachowanie proporcji obrazu
+        button.setGraphic(imageView);
+        button.setOnAction(event -> {
+            bitmapService.run();
+        });
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(30);
+        buttonBar.getButtons().add(button);
+    }
+
     public void createFillButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/fill.png");
@@ -220,14 +239,31 @@ public class AppButton {
         imageView.setPreserveRatio(true); // Zachowanie proporcji obrazu
         button.setGraphic(imageView);
         button.setOnAction(event -> {
-
-            bitmapService.fill();
+        //Dopisac wypelnianie
+            //bitmapService.fill();
         });
         button.setFocusTraversable(false);
         button.setMinHeight(30);
         button.setMaxWidth(30);
         buttonBar.getButtons().add(button);
 
+    }
+
+    public void createRotateButton() {
+        Button button = new Button();
+        Image image = loadImage("src/main/resources/rotate.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20); // Ustawienie szerokości obrazu na 30
+        imageView.setFitHeight(20); // Ustawienie wysokości obrazu na 30
+        imageView.setPreserveRatio(true); // Zachowanie proporcji obrazu
+        button.setGraphic(imageView);
+        button.setOnAction(event -> {
+            primitiveRenderer.rotateObject();
+        });
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(30);
+        buttonBar.getButtons().add(button);
     }
 
     private void clearCanvas(){
