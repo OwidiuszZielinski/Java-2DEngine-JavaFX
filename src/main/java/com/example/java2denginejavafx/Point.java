@@ -4,35 +4,18 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
-import java.util.List;
-
 public class Point {
     private double x;
     private double y;
     private double width;
     private double height;
     private Color targetColor;
-    private Color currentColor;
-
     private Shape shape;
     private Image image;
 
 
     private double imageRotate;
     private Tool tool;
-
-    @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                ", width=" + width +
-                ", height=" + height +
-                ", color=" + targetColor +
-                ", shape=" + shape +
-                ", image=" + image +
-                '}';
-    }
 
     public Point() {
     }
@@ -42,7 +25,7 @@ public class Point {
         this.y = y;
     }
 
-    // Konstruktor dla kształtu
+
     public Point(double x, double y, double width, double height, Color targetColor, Shape shape) {
         this.x = x;
         this.y = y;
@@ -50,6 +33,18 @@ public class Point {
         this.height = height;
         this.targetColor = targetColor;
         this.shape = shape;
+    }
+
+    public Point(Point point) {
+        this.x = point.x;
+        this.y = point.y;
+        this.width = point.width;
+        this.height = point.height;
+        this.targetColor = point.targetColor;
+        this.shape = point.shape;
+        this.image = point.image;
+        this.imageRotate = point.imageRotate;
+        this.tool = point.tool;
     }
 
     public double getImageRotate() {
@@ -111,9 +106,6 @@ public class Point {
     public Shape getShape() {
         return shape;
     }
-    public Shape getShapeFrom() {
-        return this.shape;
-    }
 
     public void setShape(Shape shape) {
         this.shape = shape;
@@ -127,11 +119,4 @@ public class Point {
         this.image = image;
     }
 
-    public Color getCurrentColor() {
-        return currentColor;
-    }
-
-    public void setCurrentColor(Color currentColor) {
-        this.currentColor = currentColor;
-    }
 }

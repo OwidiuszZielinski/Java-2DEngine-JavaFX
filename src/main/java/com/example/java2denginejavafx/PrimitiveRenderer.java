@@ -17,9 +17,6 @@ public class PrimitiveRenderer {
 
     private final Point point;
     private final EngineCanvas canvas;
-    private String direction;
-
-
 
     private final Point[] lastTwoClicks;
 
@@ -77,7 +74,6 @@ public class PrimitiveRenderer {
         double y2 = y1;
         double x3 = point.getX();
         double y3 = point.getY() - height / 2;
-        // Rysowanie trójkąta
         gc.setFill(point.getTargetColor());
         gc.fillPolygon(new double[]{ x1, x2, x3 }, new double[]{ y1, y2, y3 }, 3);
     }
@@ -85,7 +81,7 @@ public class PrimitiveRenderer {
     public void drawRegularHexagon(GraphicsContext gc, double sideLength) {
         double[] xPoints = new double[6];
         double[] yPoints = new double[6];
-        double rotate = 0; // Domyślnie brak obrotu
+        double rotate = 0;
         if (point.getShape() instanceof Hexagon h) {
             rotate = h.getRotate();
         }

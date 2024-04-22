@@ -10,6 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,6 @@ public class BitmapService {
     private GraphicsContext background;
     private String direction;
     private boolean render;
-    private Image image;
 
     private boolean playerAnimation;
 
@@ -195,7 +195,7 @@ public class BitmapService {
 
 
     public void run() {
-        Game game = new Game();
+        Game game = new Game(this);
         game.start(new Stage());
     }
 
@@ -249,6 +249,14 @@ public class BitmapService {
         draw(workPlace.getCanvas().getGraphicsContext2D());
         setPlayerAnimation(true);
 
+    }
+
+    public Rectangle getPlayer() {
+        return new Rectangle(25,25);
+    }
+
+    public Point copyOfPoint() {
+        return new Point(point);
     }
 }
 

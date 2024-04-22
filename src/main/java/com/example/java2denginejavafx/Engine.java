@@ -1,5 +1,6 @@
 package com.example.java2denginejavafx;
 
+import com.example.java2denginejavafx.game.Game;
 import com.example.java2denginejavafx.gui.AppButton;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -35,6 +36,7 @@ public class Engine extends Application {
     private final BitmapService bitmapService = new BitmapService(engineCanvas, point, gc);
     private final PrimitiveRenderer primitiveRenderer = new PrimitiveRenderer(point, engineCanvas, lastTwoClicks);
     private final AppButton appButton = new AppButton(buttonBar, bitmapService, primitiveRenderer);
+
 
 
     @Override
