@@ -1,13 +1,11 @@
 package com.example.java2denginejavafx;
 
 import com.example.java2denginejavafx.game.Game;
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -15,7 +13,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 
 public class BitmapService {
 
@@ -38,6 +35,7 @@ public class BitmapService {
     private Image left2;
     private Image right1;
     private Image right2;
+
     public GraphicsContext getBackground() {
         return background;
     }
@@ -45,6 +43,7 @@ public class BitmapService {
     public void setBackground(GraphicsContext background) {
         this.background = background;
     }
+
     public String getDirection() {
         return direction;
     }
@@ -54,13 +53,13 @@ public class BitmapService {
     }
 
 
-
     public BitmapService(EngineCanvas workPlace, Point point, GraphicsContext background) {
         this.workPlace = workPlace;
         this.point = point;
         this.background = background;
 
     }
+
     public BitmapService(EngineCanvas workPlace, Point point) {
         this.workPlace = workPlace;
         this.point = point;
@@ -68,9 +67,6 @@ public class BitmapService {
 
     public BitmapService() {
     }
-
-
-
 
 
     public boolean isRender() {
@@ -164,6 +160,13 @@ public class BitmapService {
         }
     }
 
+    public void choosePlayer() {
+        point.setShape(null);
+        point.setTool(null);
+        point.setImage(up1);
+
+    }
+
     public void clear() {
         workPlace.getCanvas().getGraphicsContext2D().clearRect(0, 0, workPlace.getCanvas().getWidth(), workPlace.getCanvas().getHeight());
         save();
@@ -186,7 +189,6 @@ public class BitmapService {
     }
 
 
-
     public void load() {
         chooseBackgroundFromFile();
     }
@@ -198,16 +200,17 @@ public class BitmapService {
     }
 
 
-    public void getPlayerImages(){
-             up1 = new Image("file:src/main/resources/boy_down_1.png");
-             up2 = new Image("file:src/main/resources/boy_down_2.png");
-             down1 = new Image("file:src/main/resources/boy_up_1.png");
-             down2 = new Image("file:src/main/resources/boy_up_2.png");
-             left1 = new Image("file:src/main/resources/boy_left_1.png");
-             left2 = new Image("file:src/main/resources/boy_left_2.png");
-             right1 = new Image("file:src/main/resources/boy_right_1.png");
-             right2 = new Image("file:src/main/resources/boy_right_2.png");
+    public void getPlayerImages() {
+        up1 = new Image("file:src/main/resources/boy_down_1.png");
+        up2 = new Image("file:src/main/resources/boy_down_2.png");
+        down1 = new Image("file:src/main/resources/boy_up_1.png");
+        down2 = new Image("file:src/main/resources/boy_up_2.png");
+        left1 = new Image("file:src/main/resources/boy_left_1.png");
+        left2 = new Image("file:src/main/resources/boy_left_2.png");
+        right1 = new Image("file:src/main/resources/boy_right_1.png");
+        right2 = new Image("file:src/main/resources/boy_right_2.png");
     }
+
     public void draw(GraphicsContext gc) {
         double x = point.getX() - point.getWidth() / 2;
         double y = point.getY() - point.getHeight() / 2;
@@ -221,12 +224,12 @@ public class BitmapService {
             default -> null;
         };
 
-            gc.save(); // Zachowaj stan rysowania
-            gc.translate(x + width / 2, y + height / 2); // Przesuń do punktu środkowego obrazka
-            gc.rotate(point.getImageRotate()); // Obróć obrazek
-            gc.drawImage(image, -width / 2, -height / 2, width, height); // Narysuj obrócony obrazek
-            gc.restore(); // Przywróć poprzedni stan rysowania
-        }
+        gc.save();
+        gc.translate(x + width / 2, y + height / 2);
+        gc.rotate(point.getImageRotate());
+        gc.drawImage(image, -width / 2, -height / 2, width, height);
+        gc.restore();
+    }
 
     public void drawBitmap(GraphicsContext gc) {
         double x = point.getX() - point.getWidth() / 2;
@@ -242,8 +245,10 @@ public class BitmapService {
 
     public void switchToAnimation() {
         getPlayerImages();
+        choosePlayer();
+        draw(workPlace.getCanvas().getGraphicsContext2D());
         setPlayerAnimation(true);
-        point.setImage(up1);
+
     }
 }
 
