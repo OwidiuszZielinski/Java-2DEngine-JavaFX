@@ -1,6 +1,8 @@
 package com.example.java2denginejavafx;
 
 import com.example.java2denginejavafx.gui.AppButton;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,6 +18,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Engine extends Application {
 
@@ -59,6 +62,7 @@ public class Engine extends Application {
     private void initButtons() {
         appButton.addBackgroundButton();
         appButton.addSetPlayerBitmapButton();
+        appButton.createBitmapPlayerButton();
         appButton.drawCircleButton();
         appButton.createTriangleButton();
         appButton.createSquareButton();
@@ -161,7 +165,12 @@ public class Engine extends Application {
                     primitiveRenderer.drawCircle(gc);
                 }
             } else if (point.getImage() != null && point.getTool() == null) {
-                primitiveRenderer.drawImage(gc);
+                if(bitmapService.isPlayerAnimation()){
+                    bitmapService.draw(gc);
+                }else {
+                    bitmapService.drawBitmap(gc);
+                }
+
 
             }
         }
@@ -175,21 +184,25 @@ public class Engine extends Application {
     private void handleKeyPress(KeyEvent event, Point point) {
         double moveAmount = 10;
         if (event.getCode() == KeyCode.UP) {
+            bitmapService.setDirection("up");
             if (point.getY() - moveAmount >= 0) {
                 point.setY(point.getY() - moveAmount);
                 render(point);
             }
         } else if (event.getCode() == KeyCode.DOWN) {
+            bitmapService.setDirection("down");
             if (point.getY() + moveAmount <= engineCanvas.getCanvas().getHeight() - point.getHeight()) {
                 point.setY(point.getY() + moveAmount);
                 render(point);
             }
         } else if (event.getCode() == KeyCode.LEFT) {
+            bitmapService.setDirection("left");
             if (point.getX() - moveAmount >= 0) {
                 point.setX(point.getX() - moveAmount);
                 render(point);
             }
         } else if (event.getCode() == KeyCode.RIGHT) {
+            bitmapService.setDirection("right");
             if (point.getX() + moveAmount <= engineCanvas.getCanvas().getWidth() - point.getWidth()) {
                 point.setX(point.getX() + moveAmount);
                 render(point);

@@ -229,6 +229,22 @@ public class AppButton {
         button.setMaxWidth(30);
         buttonBar.getButtons().add(button);
     }
+    public void createBitmapPlayerButton(){
+        Button button = new Button();
+        Image image = loadImage("src/main/resources/boy_up_1.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20); // Ustawienie szerokości obrazu na 30
+        imageView.setFitHeight(20); // Ustawienie wysokości obrazu na 30
+        imageView.setPreserveRatio(true); // Zachowanie proporcji obrazu
+        button.setGraphic(imageView);
+        button.setOnAction(event -> {
+            bitmapService.switchToAnimation();
+        });
+        button.setFocusTraversable(false);
+        button.setMinHeight(30);
+        button.setMaxWidth(30);
+        buttonBar.getButtons().add(button);
+    }
 
     public void createFillButton() {
         Button button = new Button();

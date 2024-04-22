@@ -1,25 +1,23 @@
 package com.example.java2denginejavafx;
 
-import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
-
-import java.util.LinkedList;
-import java.util.Queue;
+import javafx.util.Duration;
 
 public class PrimitiveRenderer {
 
     private final Point point;
     private final EngineCanvas canvas;
+    private String direction;
 
 
 
@@ -138,18 +136,8 @@ public class PrimitiveRenderer {
         }
     }
 
-    public void drawImage(GraphicsContext gc) {
-        double x = point.getX() - point.getWidth() / 2;
-        double y = point.getY() - point.getHeight() / 2;
-        Image image = point.getImage();
-        double width = Math.min(image.getWidth(), point.getWidth());
-        double height = Math.min(image.getHeight(), point.getHeight());
-        gc.save(); // Zachowaj stan rysowania
-        gc.translate(x + width / 2, y + height / 2); // Przesuń do punktu środkowego obrazka
-        gc.rotate(point.getImageRotate()); // Obróć obrazek
-        gc.drawImage(image, -width / 2, -height / 2, width, height); // Narysuj obrócony obrazek
-        gc.restore(); // Przywróć poprzedni stan rysowania
-    }
+
+
     public void rotateObject() {
         rotatePoint();
 

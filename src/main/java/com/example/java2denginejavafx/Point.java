@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
+import java.util.List;
+
 public class Point {
     private double x;
     private double y;
@@ -49,17 +51,6 @@ public class Point {
         this.targetColor = targetColor;
         this.shape = shape;
     }
-
-    // Konstruktor dla obrazu (bitmapy)
-    public Point(double x, double y, Image image) {
-        this.x = x;
-        this.y = y;
-        this.image = image;
-        this.width = image.getWidth();
-        this.height = image.getHeight();
-    }
-
-    // Gettery i settery
 
     public double getImageRotate() {
         return imageRotate;
