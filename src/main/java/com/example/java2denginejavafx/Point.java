@@ -34,7 +34,6 @@ public class Point {
         this.targetColor = targetColor;
         this.shape = shape;
     }
-
     public Point(Point point) {
         this.x = point.x;
         this.y = point.y;
@@ -46,7 +45,6 @@ public class Point {
         this.imageRotate = point.imageRotate;
         this.tool = point.tool;
     }
-
     public double getImageRotate() {
         return imageRotate;
     }

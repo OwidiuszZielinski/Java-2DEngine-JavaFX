@@ -34,7 +34,7 @@ public class Engine extends Application {
     private final BorderPane root = new BorderPane();
     private final ButtonBar buttonBar = new ButtonBar();
     private final BitmapService bitmapService = new BitmapService(engineCanvas, point, gc);
-    private final PrimitiveRenderer primitiveRenderer = new PrimitiveRenderer(point, engineCanvas, lastTwoClicks);
+    private final PrimitiveRenderer primitiveRenderer = new PrimitiveRenderer(point);
     private final AppButton appButton = new AppButton(buttonBar, bitmapService, primitiveRenderer);
 
 
@@ -46,7 +46,7 @@ public class Engine extends Application {
             initGameLoop();
             initInputHandlers();
         } catch (Exception e) {
-            //logger.logError(e);
+            logger.logError(e);
             throw new RuntimeException(e);
         }
     }
@@ -88,9 +88,7 @@ public class Engine extends Application {
             long frames = 0;
             while (running) {
                 long currentTime = System.currentTimeMillis();
-                // Update game logic
-                // update();
-                // Render frame
+                update();
                 render(point);
                 frames++;
                 if (currentTime - lastTimeLogged >= 1000) {
@@ -132,12 +130,7 @@ public class Engine extends Application {
     }
 
     private void update() {
-        try {
-            String test = null;
-            test.length();
-        } catch (NullPointerException e) {
-            logger.logError(e);
-        }
+
     }
 
     private void render(Point point) {
