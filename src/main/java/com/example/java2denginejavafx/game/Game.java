@@ -25,7 +25,7 @@ public class Game extends Application {
     private static int PLAYER_SPEED = 1;
 
     private ImageView playerImageView;
-    private Rectangle pointRectangle; // Zmiana na Rectangle
+    private Rectangle pointRectangle;
     private int score = 0;
     private final Label scoreLabel = new Label("Score: 0");
     private final Label timeLabel = new Label("Time: 0");
@@ -67,7 +67,7 @@ public class Game extends Application {
             set();
             root.getChildren().add(playerImageView);
         }
-        pointRectangle = new Rectangle(POINT_SIZE, POINT_SIZE, Color.RED); // Tworzenie punktu jako Rectangle
+        pointRectangle = new Rectangle(POINT_SIZE, POINT_SIZE, Color.RED);
         generatePoint();
         root.getChildren().add(pointRectangle);
 
@@ -145,7 +145,6 @@ public class Game extends Application {
         }
     }
 
-    // Metoda do generowania punktu w losowej lokalizacji na planszy
     private void generatePoint() {
         Random random = new Random();
         double newX = random.nextInt((int) (SCENE_WIDTH - POINT_SIZE));
