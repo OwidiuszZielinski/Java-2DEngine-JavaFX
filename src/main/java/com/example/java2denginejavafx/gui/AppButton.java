@@ -2,7 +2,6 @@ package com.example.java2denginejavafx.gui;
 
 import com.example.java2denginejavafx.BitmapService;
 import com.example.java2denginejavafx.PrimitiveRenderer;
-import com.example.java2denginejavafx.game.Game;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,7 +16,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,21 +27,12 @@ public class AppButton {
     private final double prefWidth = 120;
     private final double prefHeight = 30;
     private final BitmapService bitmapService;
-
     private final PrimitiveRenderer primitiveRenderer;
 
     public AppButton(ButtonBar buttonBar, BitmapService bitmapService, PrimitiveRenderer primitiveRenderer) {
         this.buttonBar = buttonBar;
         this.bitmapService = bitmapService;
         this.primitiveRenderer = primitiveRenderer;
-    }
-
-    public double getPrefWidth() {
-        return prefWidth;
-    }
-
-    public double getPrefHeight() {
-        return prefHeight;
     }
 
     public void addBackgroundButton() {
@@ -62,11 +51,10 @@ public class AppButton {
         chooseBackgroundButton.setPrefSize(prefWidth, prefHeight);
         ButtonBar.setButtonData(chooseBackgroundButton, ButtonBar.ButtonData.LEFT);
         buttonBar.getButtons().add(chooseBackgroundButton);
-
     }
 
     public void drawCircleButton() {
-        Circle circle = new Circle(10); // Promień 10
+        Circle circle = new Circle(10);
         circle.setFill(null);
         circle.setStroke(Color.BLACK);
         Button chooseBackgroundButton = new Button();
@@ -77,15 +65,14 @@ public class AppButton {
         chooseBackgroundButton.setMaxWidth(30);
         chooseBackgroundButton.setMaxHeight(30);
         buttonBar.getButtons().add(chooseBackgroundButton);
-
     }
 
     public void createTriangleButton() {
         Polygon triangle = new Polygon();
         triangle.getPoints().addAll(
-                0.0, 15.0,                // Lewy dolny róg
-                (double) (10 / 2), 0.0,        // Wierzchołek trójkąta
-                15.0, 15.0          // Prawy dolny róg
+                0.0, 15.0,
+                (double) (10 / 2), 0.0,
+                15.0, 15.0
         );
         triangle.setFill(null);
         triangle.setStroke(Color.BLACK);
@@ -98,12 +85,10 @@ public class AppButton {
         buttonBar.getButtons().add(chooseTriangleButton);
     }
 
-    // Metoda tworząca przycisk z kwadratem
     public void createSquareButton() {
         Rectangle square = new Rectangle(15, 15);
         square.setFill(null);
         square.setStroke(Color.BLACK);
-
         Button button = new Button();
         button.setGraphic(square);
         button.setOnAction(event -> primitiveRenderer.chooseDrawSquare());
@@ -112,13 +97,10 @@ public class AppButton {
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
     }
-
-    // Metoda tworząca przycisk z prostokątem
     public void createRectangleButton() {
         Rectangle rectangle = new Rectangle(35, 15);
         rectangle.setFill(null);
         rectangle.setStroke(Color.BLACK);
-
         Button button = new Button();
         button.setGraphic(rectangle);
         button.setOnAction(event -> primitiveRenderer.chooseDrawRectangle());
@@ -127,8 +109,6 @@ public class AppButton {
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
     }
-
-    // Metoda tworząca przycisk z wielokątem (np. sześciokątem)
     public void createPolygonButton() {
         Polygon polygon = new Polygon();
         for (int i = 0; i < 6; i++) {
@@ -139,7 +119,6 @@ public class AppButton {
         }
         polygon.setFill(null);
         polygon.setStroke(Color.BLACK);
-
         Button button = new Button();
         button.setGraphic(polygon);
         button.setOnAction(event -> primitiveRenderer.chooseDrawHexagon());
@@ -165,26 +144,17 @@ public class AppButton {
         button.setMinHeight(30);
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
-
         button.setOnAction(event -> {
-            // Zmiana tekstu na przycisku
             if (button.getText().equals("Render")) {
                 button.setText("Move");
                 bitmapService.setRender(true);
             } else {
-
                 button.setText("Render");
                 bitmapService.setRender(false);
-                //Napisz metode ktora zapisze aktualne tlo do tla i wczyta na tlo
                 bitmapService.save();
-
             }
-            // Zablokowanie obsługi zdarzenia po pierwszym kliknięciu
         });
-
-
     }
-
     public void createColorPickerButton() {
         final ColorPicker colorPicker = new ColorPicker();
         colorPicker.setValue(Color.CORAL);
@@ -213,7 +183,7 @@ public class AppButton {
 
     }
 
-    public void createRunButton(){
+    public void createRunButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/run.png");
         ImageView imageView = new ImageView(image);
@@ -229,7 +199,8 @@ public class AppButton {
         button.setMaxWidth(30);
         buttonBar.getButtons().add(button);
     }
-    public void createBitmapPlayerButton(){
+
+    public void createBitmapPlayerButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/boy_up_1.png");
         ImageView imageView = new ImageView(image);
@@ -250,12 +221,12 @@ public class AppButton {
         Button button = new Button();
         Image image = loadImage("src/main/resources/fill.png");
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(20); // Ustawienie szerokości obrazu na 30
-        imageView.setFitHeight(20); // Ustawienie wysokości obrazu na 30
-        imageView.setPreserveRatio(true); // Zachowanie proporcji obrazu
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        imageView.setPreserveRatio(true);
         button.setGraphic(imageView);
         button.setOnAction(event -> {
-        //Dopisac wypelnianie
+            //Dopisac wypelnianie
             //bitmapService.fill();
         });
         button.setFocusTraversable(false);
@@ -282,7 +253,7 @@ public class AppButton {
         buttonBar.getButtons().add(button);
     }
 
-    private void clearCanvas(){
+    private void clearCanvas() {
         bitmapService.clear();
     }
 
@@ -290,23 +261,19 @@ public class AppButton {
         File file = new File(pathname);
         if (!file.exists()) {
             System.out.println("Plik " + file.getPath() + " nie istnieje.");
-            return null; // Zwróć null w przypadku błędu
+            return null;
         }
-
         BufferedImage bufferedImage;
         try {
             bufferedImage = ImageIO.read(file);
         } catch (IOException e) {
             System.out.println("Nie udało się wczytać obrazu z pliku: " + e.getMessage());
-            return null; // Zwróć null w przypadku błędu
+            return null;
         }
-
-        // Sprawdź, czy udało się wczytać obraz
         if (bufferedImage == null) {
             System.out.println("Nie udało się wczytać obrazu z pliku.");
-            return null; // Zwróć null w przypadku błędu
+            return null;
         }
-
         return SwingFXUtils.toFXImage(bufferedImage, null);
     }
 

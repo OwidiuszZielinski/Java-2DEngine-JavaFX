@@ -19,7 +19,6 @@ public class Logger {
     }
 
     public Logger() {
-
     }
 
     public void logError(Exception e) {

@@ -22,7 +22,7 @@ public class BitmapService {
     private final FileChooser fileChooser = new FileChooser();
 
     private GraphicsContext background;
-    private String direction;
+    private String direction = "";
     private boolean render;
 
     private boolean playerAnimation;
