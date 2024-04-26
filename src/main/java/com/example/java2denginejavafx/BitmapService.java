@@ -28,25 +28,14 @@ public class BitmapService {
     private boolean playerAnimation;
 
     private Image up1;
-    private Image up2;
+
     private Image down1;
-    private Image down2;
+
     private Image left1;
-    private Image left2;
     private Image right1;
-    private Image right2;
 
-    public GraphicsContext getBackground() {
-        return background;
-    }
 
-    public void setBackground(GraphicsContext background) {
-        this.background = background;
-    }
 
-    public String getDirection() {
-        return direction;
-    }
 
     public void setDirection(String direction) {
         this.direction = direction;
@@ -60,10 +49,7 @@ public class BitmapService {
 
     }
 
-    public BitmapService(EngineCanvas workPlace, Point point) {
-        this.workPlace = workPlace;
-        this.point = point;
-    }
+
 
     public BitmapService() {
     }
@@ -193,7 +179,7 @@ public class BitmapService {
         chooseBackgroundFromFile();
     }
 
-
+    //Wywolana metoda do uruchomienai gry
     public void run() {
         Game game = new Game(this);
         game.start(new Stage());
@@ -202,13 +188,9 @@ public class BitmapService {
 
     public void getPlayerImages() {
         up1 = new Image("file:src/main/resources/boy_down_1.png");
-        up2 = new Image("file:src/main/resources/boy_down_2.png");
         down1 = new Image("file:src/main/resources/boy_up_1.png");
-        down2 = new Image("file:src/main/resources/boy_up_2.png");
         left1 = new Image("file:src/main/resources/boy_left_1.png");
-        left2 = new Image("file:src/main/resources/boy_left_2.png");
         right1 = new Image("file:src/main/resources/boy_right_1.png");
-        right2 = new Image("file:src/main/resources/boy_right_2.png");
     }
 
     public void draw(GraphicsContext gc) {
