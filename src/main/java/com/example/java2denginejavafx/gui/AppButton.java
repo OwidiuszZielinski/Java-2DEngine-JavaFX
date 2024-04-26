@@ -21,7 +21,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
+/**
+ * Klasa AppButton zawiera metody do tworzenia przycisków aplikacji GUI.
+ */
 public class AppButton {
     private final ButtonBar buttonBar;
     private final double prefWidth = 120;
@@ -29,12 +31,20 @@ public class AppButton {
     private final BitmapService bitmapService;
     private final PrimitiveRenderer primitiveRenderer;
 
+    /**
+     * Konstruktor klasy AppButton.
+     * @param buttonBar Kontener przycisków, do którego będą dodawane przyciski.
+     * @param bitmapService Serwis obsługujący operacje na bitmapach.
+     * @param primitiveRenderer Renderer do rysowania figur.
+     */
     public AppButton(ButtonBar buttonBar, BitmapService bitmapService, PrimitiveRenderer primitiveRenderer) {
         this.buttonBar = buttonBar;
         this.bitmapService = bitmapService;
         this.primitiveRenderer = primitiveRenderer;
     }
-
+    /**
+     * Metoda dodająca przycisk do wybierania tła.
+     */
     public void addBackgroundButton() {
         Button chooseBackgroundButton = new Button("Wybierz tło");
         chooseBackgroundButton.setOnAction(event -> bitmapService.chooseBackground());
@@ -43,7 +53,9 @@ public class AppButton {
         ButtonBar.setButtonData(chooseBackgroundButton, ButtonBar.ButtonData.LEFT);
         buttonBar.getButtons().add(chooseBackgroundButton);
     }
-
+    /**
+     * Metoda dodająca przycisk do wybierania bitmapy gracza.
+     */
     public void addSetPlayerBitmapButton() {
         Button chooseBackgroundButton = new Button("Bitmapa gracza");
         chooseBackgroundButton.setOnAction(event -> bitmapService.choosePlayerBitmap());
@@ -52,7 +64,9 @@ public class AppButton {
         ButtonBar.setButtonData(chooseBackgroundButton, ButtonBar.ButtonData.LEFT);
         buttonBar.getButtons().add(chooseBackgroundButton);
     }
-
+    /**
+     * Metoda dodająca przycisk do rysowania koła.
+     */
     public void drawCircleButton() {
         Circle circle = new Circle(10);
         circle.setFill(null);
@@ -66,7 +80,9 @@ public class AppButton {
         chooseBackgroundButton.setMaxHeight(30);
         buttonBar.getButtons().add(chooseBackgroundButton);
     }
-
+    /**
+     * Metoda dodająca przycisk do rysowania trójkąta.
+     */
     public void createTriangleButton() {
         Polygon triangle = new Polygon();
         triangle.getPoints().addAll(
@@ -84,7 +100,9 @@ public class AppButton {
         chooseTriangleButton.setMaxWidth(50);
         buttonBar.getButtons().add(chooseTriangleButton);
     }
-
+    /**
+     * Metoda dodająca przycisk do rysowania kwadratu.
+     */
     public void createSquareButton() {
         Rectangle square = new Rectangle(15, 15);
         square.setFill(null);
@@ -97,6 +115,9 @@ public class AppButton {
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
     }
+    /**
+     * Metoda dodająca przycisk do rysowania prostokąta.
+     */
     public void createRectangleButton() {
         Rectangle rectangle = new Rectangle(35, 15);
         rectangle.setFill(null);
@@ -109,6 +130,9 @@ public class AppButton {
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
     }
+    /**
+     * Metoda dodająca przycisk do rysowania wielokąta.
+     */
     public void createPolygonButton() {
         Polygon polygon = new Polygon();
         for (int i = 0; i < 6; i++) {
@@ -127,7 +151,9 @@ public class AppButton {
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
     }
-
+    /**
+     * Metoda dodająca przycisk do rysowania linii.
+     */
     public void createLineButton() {
         Button button = new Button();
         button.setGraphic(new Rectangle(35.0, 1.0));
@@ -137,7 +163,9 @@ public class AppButton {
         button.setMaxWidth(50);
         buttonBar.getButtons().add(button);
     }
-
+    /**
+     * Metoda dodająca przycisk do przełączania między trybem renderowania a ruchem obiektu.
+     */
     public void createMoveOrRenderButton() {
         Button button = new Button("Render");
         button.setFocusTraversable(false);
@@ -155,6 +183,9 @@ public class AppButton {
             }
         });
     }
+    /**
+     * Metoda dodająca przycisk do wybierania koloru.
+     */
     public void createColorPickerButton() {
         final ColorPicker colorPicker = new ColorPicker();
         colorPicker.setValue(Color.CORAL);
@@ -172,7 +203,9 @@ public class AppButton {
         });
         buttonBar.getButtons().add(colorPicker);
     }
-
+    /**
+     * Metoda dodająca przycisk do czyszczenia płótna.
+     */
     public void createClearCanvasButton() {
         Button button = new Button("Clear");
         button.setOnAction(event -> clearCanvas());
@@ -182,7 +215,9 @@ public class AppButton {
         buttonBar.getButtons().add(button);
 
     }
-
+    /**
+     * Metoda dodająca przycisk do uruchamiania gry.
+     */
     public void createRunButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/run.png");
@@ -199,7 +234,9 @@ public class AppButton {
         button.setMaxWidth(30);
         buttonBar.getButtons().add(button);
     }
-
+    /**
+     * Metoda dodająca przycisk do przełączania animacji gracza.
+     */
     public void createBitmapPlayerButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/boy_up_1.png");
@@ -216,7 +253,9 @@ public class AppButton {
         button.setMaxWidth(30);
         buttonBar.getButtons().add(button);
     }
-
+    /**
+     * Metoda dodająca przycisk do wypełniania obszaru.
+     */
     public void createFillButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/fill.png");
@@ -235,7 +274,9 @@ public class AppButton {
         buttonBar.getButtons().add(button);
 
     }
-
+    /**
+     * Metoda dodająca przycisk do obracania obiektu.
+     */
     public void createRotateButton() {
         Button button = new Button();
         Image image = loadImage("src/main/resources/rotate.png");
@@ -256,7 +297,11 @@ public class AppButton {
     private void clearCanvas() {
         bitmapService.clear();
     }
-
+    /**
+     * Metoda wczytująca obraz z pliku.
+     * @param pathname Ścieżka do pliku z obrazem.
+     * @return Obraz wczytany z pliku.
+     */
     public Image loadImage(String pathname) {
         File file = new File(pathname);
         if (!file.exists()) {

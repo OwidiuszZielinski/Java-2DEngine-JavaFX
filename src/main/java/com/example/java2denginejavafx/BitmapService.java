@@ -10,17 +10,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Klasa BitmapService zapewnia funkcje obsługi bitmap, w tym wybieranie tła, gracza oraz zapisywanie i wczytywanie obrazów.
+ */
 public class BitmapService {
 
     private EngineCanvas workPlace;
     private Point point;
     private final FileChooser fileChooser = new FileChooser();
-
     private GraphicsContext background;
     private String direction = "";
     private boolean render;
@@ -35,20 +36,23 @@ public class BitmapService {
     private Image right1;
 
 
-
-
     public void setDirection(String direction) {
         this.direction = direction;
     }
 
-
+    /**
+     * Konstruktor klasy BitmapService.
+     *
+     * @param workPlace  Obiekt klasy EngineCanvas, na którym będzie wyświetlany obraz.
+     * @param point      Obiekt klasy Point, reprezentujący pozycję gracza.
+     * @param background Kontekst graficzny tła.
+     */
     public BitmapService(EngineCanvas workPlace, Point point, GraphicsContext background) {
         this.workPlace = workPlace;
         this.point = point;
         this.background = background;
 
     }
-
 
 
     public BitmapService() {
@@ -71,7 +75,9 @@ public class BitmapService {
         this.playerAnimation = playerAnimation;
     }
 
-
+    /**
+     * Metoda wybierająca tło z pliku.
+     */
     public void chooseBackground() {
         fileChooser.setTitle("Wybierz tło");
         File selectedFile = fileChooser.showOpenDialog(null);
@@ -87,38 +93,26 @@ public class BitmapService {
         }
     }
 
+    /**
+     * Metoda wybierająca tło z domyślnego pliku.
+     */
     public void chooseBackgroundFromFile() {
         try {
-            // Sprawdź, czy plik istnieje
             File file = new File("src/main/resources/canvas.png");
             if (!file.exists()) {
                 System.out.println("Plik " + file.getPath() + " nie istnieje.");
                 return;
             }
-
-            // Wczytaj obraz z pliku
             BufferedImage bufferedImage = ImageIO.read(file);
-
-            // Sprawdź, czy udało się wczytać obraz
             if (bufferedImage == null) {
                 System.out.println("Nie udało się wczytać obrazu z pliku.");
                 return;
             }
-
-            // Konwertuj BufferedImage do javafx.scene.image.Image
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-
-            // Pobierz kanwę i kontekst graficzny
             Canvas canvas = workPlace.getCanvas();
             GraphicsContext gc = canvas.getGraphicsContext2D();
-
-            // Wyczyść kanwę
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-            // Narysuj obraz na kanwie
             gc.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
-
-            // Zwolnij zasoby
             bufferedImage = null;
             image = null;
         } catch (IOException e) {
@@ -132,6 +126,9 @@ public class BitmapService {
         }
     }
 
+    /**
+     * Metoda wybierająca bitmapę gracza.
+     */
     public void choosePlayerBitmap() {
         setPlayerAnimation(false);
         fileChooser.setTitle("Wybierz bitmape gracza");
@@ -146,13 +143,18 @@ public class BitmapService {
         }
     }
 
+    /**
+     * Metoda wybierająca obraz gracza.
+     */
     public void choosePlayer() {
         point.setShape(null);
         point.setTool(null);
         point.setImage(up1);
-
     }
 
+    /**
+     * Metoda czyszcząca obraz.
+     */
     public void clear() {
         workPlace.getCanvas().getGraphicsContext2D().clearRect(0, 0, workPlace.getCanvas().getWidth(), workPlace.getCanvas().getHeight());
         save();
@@ -161,7 +163,9 @@ public class BitmapService {
 
     }
 
-
+    /**
+     * Metoda zapisująca obraz do pliku.
+     */
     public void save() {
         WritableImage writableImage = new WritableImage((int) workPlace.getCanvas().getWidth(), (int) workPlace.getCanvas().getHeight());
         workPlace.getCanvas().snapshot(null, writableImage);
@@ -174,18 +178,24 @@ public class BitmapService {
         }
     }
 
-
+    /**
+     * Metoda wczytująca obraz z pliku.
+     */
     public void load() {
         chooseBackgroundFromFile();
     }
 
-    //Wywolana metoda do uruchomienai gry
+    /**
+     * Metoda uruchamiająca grę.
+     */
     public void run() {
         Game game = new Game(this);
         game.start(new Stage());
     }
 
-
+    /**
+     * Metoda pobierająca obrazy gracza.
+     */
     public void getPlayerImages() {
         up1 = new Image("file:src/main/resources/boy_down_1.png");
         down1 = new Image("file:src/main/resources/boy_up_1.png");
@@ -193,6 +203,11 @@ public class BitmapService {
         right1 = new Image("file:src/main/resources/boy_right_1.png");
     }
 
+    /**
+     * Metoda rysująca obraz gracza.
+     *
+     * @param gc Kontekst graficzny.
+     */
     public void draw(GraphicsContext gc) {
         double x = point.getX() - point.getWidth() / 2;
         double y = point.getY() - point.getHeight() / 2;
@@ -205,7 +220,6 @@ public class BitmapService {
             case "right" -> right1;
             default -> null;
         };
-
         gc.save();
         gc.translate(x + width / 2, y + height / 2);
         gc.rotate(point.getImageRotate());
@@ -213,6 +227,11 @@ public class BitmapService {
         gc.restore();
     }
 
+    /**
+     * Metoda rysująca bitmapę gracza.
+     *
+     * @param gc Kontekst graficzny.
+     */
     public void drawBitmap(GraphicsContext gc) {
         double x = point.getX() - point.getWidth() / 2;
         double y = point.getY() - point.getHeight() / 2;
@@ -225,6 +244,9 @@ public class BitmapService {
         gc.restore(); // Przywróć poprzedni stan rysowania
     }
 
+    /**
+     * Metoda przełączająca na animację gracza.
+     */
     public void switchToAnimation() {
         getPlayerImages();
         choosePlayer();
@@ -233,10 +255,11 @@ public class BitmapService {
 
     }
 
-    public Rectangle getPlayer() {
-        return new Rectangle(25,25);
-    }
-
+    /**
+     * Metoda tworząca kopię obiektu punktu.
+     *
+     * @return Kopię obiektu klasy Point.
+     */
     public Point copyOfPoint() {
         return new Point(point);
     }

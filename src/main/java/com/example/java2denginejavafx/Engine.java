@@ -1,9 +1,6 @@
 package com.example.java2denginejavafx;
 
-import com.example.java2denginejavafx.game.Game;
 import com.example.java2denginejavafx.gui.AppButton;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,8 +16,11 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
+
+/**
+ * Klasa Engine jest główną klasą aplikacji, która zarządza logiką gry, renderowaniem oraz obsługą interakcji użytkownika.
+ */
 public class Engine extends Application {
 
     private static final int FPS = 60;
@@ -37,8 +37,10 @@ public class Engine extends Application {
     private final PrimitiveRenderer primitiveRenderer = new PrimitiveRenderer(point);
     private final AppButton appButton = new AppButton(buttonBar, bitmapService, primitiveRenderer);
 
-
-
+    /**
+     * Metoda startująca aplikację.
+     * @param primaryStage Główny kontener okna aplikacji.
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -51,6 +53,10 @@ public class Engine extends Application {
         }
     }
 
+    /**
+     * Inicjalizuje grafikę aplikacji.
+     * @param primaryStage Główny kontener okna aplikacji.
+     */
     private void initGraphics(Stage primaryStage) {
         initButtons();
         gc = engineCanvas.getCanvas().getGraphicsContext2D();
@@ -60,7 +66,9 @@ public class Engine extends Application {
         primaryStage.show();
         sceneSizeListener(primaryStage);
     }
-
+    /**
+     * Inicjalizuje przyciski w interfejsie użytkownika.
+     */
     private void initButtons() {
         appButton.addBackgroundButton();
         appButton.addSetPlayerBitmapButton();
@@ -80,7 +88,9 @@ public class Engine extends Application {
         root.setTop(buttonBar);
     }
 
-
+    /**
+     * Inicjalizuje pętlę gry.
+     */
     private void initGameLoop() {
         new Thread(() -> {
             long startTime = System.currentTimeMillis();
@@ -107,6 +117,9 @@ public class Engine extends Application {
             }
         }).start();
     }
+    /**
+     * Inicjalizuje obsługę zdarzeń wejścia użytkownika.
+     */
     private void initInputHandlers() {
         engineCanvas.getCanvas().setOnMouseClicked(event -> {
             point.setX(event.getX());
@@ -128,11 +141,16 @@ public class Engine extends Application {
         engineCanvas.getCanvas().setOnKeyPressed(keyEvent -> handleKeyPress(keyEvent, point));
         engineCanvas.getCanvas().setFocusTraversable(true);
     }
-
+    /**
+     * Aktualizuje logikę gry.
+     */
     private void update() {
 
     }
-
+    /**
+     * Renderuje obiekty na płótnie.
+     * @param point Obiekt do renderowania.
+     */
     private void render(Point point) {
         if (!bitmapService.isRender()) {
             bitmapService.load();
@@ -152,17 +170,19 @@ public class Engine extends Application {
                 Shape shape = point.getShape();
                 if (shape instanceof Rectangle) {
                     primitiveRenderer.drawSquare(gc);
-                }if (shape instanceof Polygon) {
+                }
+                if (shape instanceof Polygon) {
                     primitiveRenderer.drawEquilateralTriangle(gc, point.getHeight());
-                }if (shape instanceof Hexagon) {
+                }
+                if (shape instanceof Hexagon) {
                     primitiveRenderer.drawRegularHexagon(gc, point.getHeight());
-                } else if (shape instanceof Circle ) {
+                } else if (shape instanceof Circle) {
                     primitiveRenderer.drawCircle(gc);
                 }
             } else if (point.getImage() != null && point.getTool() == null) {
-                if(bitmapService.isPlayerAnimation()){
+                if (bitmapService.isPlayerAnimation()) {
                     bitmapService.draw(gc);
-                }else {
+                } else {
                     bitmapService.drawBitmap(gc);
                 }
 
@@ -170,12 +190,21 @@ public class Engine extends Application {
             }
         }
     }
-
+    /**
+     * Obsługuje kliknięcie myszy.
+     * @param event Zdarzenie myszy.
+     * @param point Punkt, na który kliknięto myszą.
+     */
     private void handleMouseClick(MouseEvent event, Point point) {
         point.setX(event.getX());
         point.setY(event.getY());
         render(point);
     }
+    /**
+     * Obsługuje naciśnięcie klawisza.
+     * @param event Zdarzenie klawiatury.
+     * @param point Punkt, na którym aktualnie znajduje się kursor.
+     */
     private void handleKeyPress(KeyEvent event, Point point) {
         double moveAmount = 10;
         if (event.getCode() == KeyCode.UP) {
@@ -218,7 +247,10 @@ public class Engine extends Application {
             System.exit(0);
         }
     }
-
+    /**
+     * Nasłuchuje zmiany rozmiaru sceny i aktualizuje rozmiar płótna.
+     * @param primaryStage Główny kontener okna aplikacji.
+     */
     private void sceneSizeListener(Stage primaryStage) {
         primaryStage.widthProperty().addListener((obs, oldWidth, newWidth) -> {
             engineCanvas.getCanvas().setWidth(newWidth.doubleValue());
@@ -228,7 +260,10 @@ public class Engine extends Application {
             engineCanvas.getCanvas().setHeight(newHeight.doubleValue());
         });
     }
-
+    /**
+     * Metoda uruchamiająca aplikację.
+     * @param args Argumenty wiersza poleceń.
+     */
     public static void main(String[] args) {
         launch();
     }
