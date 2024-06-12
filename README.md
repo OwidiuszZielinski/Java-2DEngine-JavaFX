@@ -17,7 +17,3 @@ project offers a variety of key features, including:
  
 These functionalities enable the creation of games using player bitmaps, allowing users to personalize game characters and create custom background maps. This facilitates the creation of a unique game environment tailored to the project’s requirements.
 
-<h1 align="center">
-  <img src="https://drive.google.com/uc?id=1vBehArBHAzQTUQt5LcFVEPEH9aaGTPYB&export=download" width="1000"/>
-  <br>
-</h1> 
